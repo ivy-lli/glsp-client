@@ -31,14 +31,14 @@ import {
     toActionArray,
     ValidationDecorator,
     ValidationStatus,
-    ViewerOptions
+    ViewerOptions,
+    filterMatchingType
 } from '@eclipse-glsp/client';
 import { inject, injectable } from 'inversify';
 import { TYPES } from 'sprotty/lib';
 import { DOMHelper } from 'sprotty/lib/base/views/dom-helper';
 
 import { isTaskNode, TaskNode } from '../model';
-
 export class ApplyTaskEditOperation implements Action {
     static readonly KIND = 'applyTaskEdit';
     readonly kind = ApplyTaskEditOperation.KIND;
@@ -156,5 +156,5 @@ export class TaskEditor extends AbstractUIExtension {
 }
 
 function getTask(ids: string[], element: SModelElement): TaskNode[] {
-    return ids.map(id => element.index.getById(id)).filter(isTaskNode);
+    return filterMatchingType(ids.map(id => element.index.getById(id)), isTaskNode);
 }

@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2019 EclipseSource and others.
+ * Copyright (c) 2019-2021 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -32,8 +32,8 @@ import {
     TYPES
 } from 'sprotty';
 
-import { isNotUndefined } from '../../utils/smodel-util';
-import { addResizeHandles, isResizable, removeResizeHandles, SResizeHandle } from '../change-bounds/model';
+import { forEachMatchingType, isNotUndefined } from '../../utils/smodel-util';
+import { addResizeHandles, isResizableParent, removeResizeHandles, SResizeHandle } from '../change-bounds/model';
 import { createMovementRestrictionFeedback, removeMovementRestrictionFeedback } from '../change-bounds/movement-restrictor';
 import { ChangeBoundsTool } from '../tools/change-bounds-tool';
 import { FeedbackCommand } from './model';
@@ -54,14 +54,11 @@ export class ShowChangeBoundsToolResizeFeedbackCommand extends FeedbackCommand {
 
     execute(context: CommandExecutionContext): CommandReturn {
         const index = context.root.index;
-        index
-            .all()
-            .filter(isResizable)
-            .forEach(removeResizeHandles);
+        forEachMatchingType(context.root, isResizableParent, removeResizeHandles);
 
         if (isNotUndefined(this.action.elementId)) {
             const resizeElement = index.getById(this.action.elementId);
-            if (isNotUndefined(resizeElement) && isResizable(resizeElement)) {
+            if (isNotUndefined(resizeElement) && isResizableParent(resizeElement)) {
                 addResizeHandles(resizeElement);
             }
         }
@@ -76,11 +73,7 @@ export class HideChangeBoundsToolResizeFeedbackCommand extends FeedbackCommand {
     @inject(TYPES.Action) protected action: HideChangeBoundsToolResizeFeedbackAction;
 
     execute(context: CommandExecutionContext): CommandReturn {
-        const index = context.root.index;
-        index
-            .all()
-            .filter(isResizable)
-            .forEach(removeResizeHandles);
+        forEachMatchingType(context.root, isResizableParent, removeResizeHandles);
         return context.root;
     }
 }

@@ -29,10 +29,11 @@ import {
 
 export const resizeFeature = Symbol('resizeFeature');
 
-export interface Resizable extends BoundsAware, Selectable {
-}
+export type Resizable = BoundsAware & Selectable;
 
-export function isResizable(element: SModelElement): element is SParentElement & Resizable {
+export type ResizableParent = SParentElement & Resizable;
+
+export function isResizableParent(element: SModelElement): element is ResizableParent {
     return isBoundsAware(element) && isSelectable(element) && element instanceof SParentElement && element.hasFeature(resizeFeature);
 }
 

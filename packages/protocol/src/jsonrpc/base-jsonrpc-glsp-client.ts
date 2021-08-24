@@ -127,12 +127,12 @@ export class BaseJsonrpcGLSPClient implements GLSPClient {
 
     protected async doCreateConnection(): Promise<MessageConnection> {
         const connection = typeof this.connectionProvider === 'function' ? await this.connectionProvider() : this.connectionProvider;
-        connection.onError((data: [Error, Message, number]) => this.handleConnectionError(data[0], data[1], data[2]));
+        connection.onError(data => this.handleConnectionError(data[0], data[1], data[2]));
         connection.onClose(() => this.handleConnectionClosed());
         return connection;
     }
 
-    protected handleConnectionError(error: Error, message: Message, count: number): void {
+    protected handleConnectionError(error: Error, _message?: Message, _count?: number): void {
         JsonrpcGLSPClient.error('Connection to server is erroring. Shutting down server.', error);
         this.stop();
         this.state = ClientState.ServerError;

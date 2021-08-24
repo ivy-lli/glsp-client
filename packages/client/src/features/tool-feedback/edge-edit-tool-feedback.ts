@@ -44,7 +44,7 @@ import {
     TYPES
 } from 'sprotty';
 
-import { isNotUndefined, isRoutable, isRoutingHandle } from '../../utils/smodel-util';
+import { forEachMatchingType, isNotUndefined, isRoutable, isRoutingHandle } from '../../utils/smodel-util';
 import { getAbsolutePosition, toAbsoluteBounds } from '../../utils/viewpoint-util';
 import { addReconnectHandles, removeReconnectHandles } from '../reconnect/model';
 import {
@@ -76,11 +76,10 @@ export class ShowEdgeReconnectHandlesFeedbackCommand extends FeedbackCommand {
     }
 
     execute(context: CommandExecutionContext): CommandReturn {
-        const index = context.root.index;
-        index.all().filter(isRoutable).forEach(removeReconnectHandles);
+        forEachMatchingType(context.root, isRoutable, removeReconnectHandles);
 
         if (isNotUndefined(this.action.elementId)) {
-            const routableElement = index.getById(this.action.elementId);
+            const routableElement = context.root.index.getById(this.action.elementId);
             if (isNotUndefined(routableElement) && isRoutable(routableElement)) {
                 addReconnectHandles(routableElement);
             }
@@ -98,8 +97,7 @@ export class HideEdgeReconnectHandlesFeedbackCommand extends FeedbackCommand {
     }
 
     execute(context: CommandExecutionContext): CommandReturn {
-        const index = context.root.index;
-        index.all().filter(isRoutable).forEach(removeReconnectHandles);
+        forEachMatchingType(context.root, isRoutable, removeReconnectHandles);
         return context.root;
     }
 }

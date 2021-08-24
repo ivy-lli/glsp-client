@@ -18,7 +18,7 @@ import * as snabbdom from 'snabbdom-jsx';
 import { VNode } from 'snabbdom/vnode';
 import { IView, ORIGIN_POINT, Point, RenderingContext, setAttr, SModelElement } from 'sprotty';
 
-import { isResizable, ResizeHandleLocation, SResizeHandle } from '../change-bounds/model';
+import { isResizableParent, ResizeHandleLocation, SResizeHandle } from '../change-bounds/model';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const JSX = { createElement: snabbdom.svg };
@@ -51,7 +51,7 @@ export class SResizeHandleView implements IView {
 
     protected getPosition(handle: SResizeHandle): Point | undefined {
         const parent = handle.parent;
-        if (isResizable(parent)) {
+        if (isResizableParent(parent)) {
             if (handle.location === ResizeHandleLocation.TopLeft) {
                 return { x: 0, y: 0 };
             } else if (handle.location === ResizeHandleLocation.TopRight) {

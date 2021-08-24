@@ -1,14 +1,15 @@
 {
     "compilerOptions": {
+        "baseUrl": "src",
         "skipLibCheck": true,
         "declaration": true,
         "declarationMap": true,
         "noImplicitAny": true,
-        "noEmitOnError": false,
+        "strictNullChecks": true,
+        "strictFunctionTypes": true,
         "noImplicitThis": true,
         "noUnusedLocals": true,
         "noImplicitReturns": true,
-        "strictNullChecks": true,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "downlevelIteration": true,
@@ -20,6 +21,9 @@
             "es6",
             "dom"
         ],
-        "sourceMap": true
+        "sourceMap": true,
+        "importHelpers": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true
     }
 }

@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2019 EclipseSource and others.
+ * Copyright (c) 2019-2021 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -53,3 +53,24 @@ export function isStringArray(object: any, supportEmpty = false): object is stri
 export function isArrayMatching(object: any, predicate: (elem: any) => boolean, supportEmpty = false): boolean {
     return Array.isArray(object) && object.every(predicate) && (supportEmpty || object.length > 0);
 }
+
+export function filterMatching<T>(input: Array<T | undefined> | Iterable<T>, predicate: (element: T) => boolean): Array<T> {
+    const inputArray = Array.isArray(input) ? input : Array.from(input);
+    return inputArray.reduce<Array<T>>((result, element) => {
+        if (element && predicate(element)) {
+            result.push(element);
+        }
+        return result;
+    }, []);
+}
+
+export function filterMatchingType<T, S extends T>(input: Array<T | undefined> | Iterable<T>, typeGuardFn: (element: T) => element is S): Array<S> {
+    const inputArray = Array.isArray(input) ? input : Array.from(input);
+    return inputArray.reduce<Array<S>>((result, element) => {
+        if (element && typeGuardFn(element)) {
+            result.push(element);
+        }
+        return result;
+    }, []);
+}
+

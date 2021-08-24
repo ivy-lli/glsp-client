@@ -38,8 +38,8 @@ import {
     TYPES
 } from 'sprotty';
 import { matchesKeystroke } from 'sprotty/lib/utils/keyboard';
-
 import { GLSP_TYPES } from '../../base/types';
+import { filterMatchingType } from '../../utils/array-utils';
 import { collectIssueMarkers, MarkerPredicates } from '../../utils/marker';
 import { isSelectableAndBoundsAware } from '../../utils/smodel-util';
 import { SelectCommand, SelectionService } from '../select/selection-service';
@@ -176,7 +176,9 @@ export class NavigateToMarkerCommand extends Command {
         } else {
             selectedIds = Array.from(this.selectionService.getSelectedElementIDs());
         }
-        return selectedIds.map(id => root.index.getById(id)).filter(isSelectable);
+
+        const selectedElements = selectedIds.map(id => root.index.getById(id)!);
+        return filterMatchingType(selectedElements, isSelectable);
     }
 
     protected getTarget(selected: SModelElement[], root: SModelRoot): SIssueMarker | undefined {

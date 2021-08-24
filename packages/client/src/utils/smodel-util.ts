@@ -27,24 +27,23 @@ import {
     SRoutableElement,
     SRoutingHandle
 } from 'sprotty';
-
 import { ElementAndRoutingPoints } from '../base/operations/operation';
+import { filterMatching, filterMatchingType } from './array-utils';
 
 export function getIndex(element: SModelElement): SModelIndex<SModelElement> {
     return element.root.index;
 }
 
-export function forEachElement<T>(element: SModelElement, predicate: (element: SModelElement) => element is SModelElement & T,
+export function forEachMatchingType<T>(element: SModelElement, predicate: (element: SModelElement) => element is SModelElement & T,
     runnable: (element: SModelElement & T) => void): void {
-    getIndex(element).all()
-        .filter(predicate)
+    filterMatchingType(getIndex(element).all(), predicate)
         .forEach(runnable);
 }
 
-export function getMatchingElements<T>(element: SModelElement, predicate: (element: SModelElement) => element is SModelElement & T): (SModelElement & T)[] {
-    const matching: (SModelElement & T)[] = [];
-    forEachElement(element, predicate, item => matching.push(item));
-    return matching;
+export function forEachMatching(element: SModelElement, predicate: (element: SModelElement) => boolean,
+    runnable: (element: SModelElement) => void): void {
+    filterMatching(getIndex(element).all(), predicate)
+        .forEach(runnable);
 }
 
 export function hasSelectedElements(element: SModelElement): boolean {
@@ -86,11 +85,11 @@ export function removeCssClasses(root: SModelElement, cssClasses: string[]): voi
     }
 }
 
-export function isNonRoutableSelectedMovableBoundsAware(element: SModelElement): element is SelectableBoundsAware {
+export function isNonRoutableSelectedMovableBoundsAware(element: SModelElement): element is SelectableBoundsAwareElement {
     return isNonRoutableSelectedBoundsAware(element) && isMoveable(element);
 }
 
-export function isNonRoutableSelectedBoundsAware(element: SModelElement): element is SelectableBoundsAware {
+export function isNonRoutableSelectedBoundsAware(element: SModelElement): element is SelectableBoundsAwareElement {
     return isBoundsAware(element) && isSelected(element) && !isRoutable(element);
 }
 
@@ -102,15 +101,15 @@ export function isRoutingHandle(element: SModelElement | undefined): element is 
     return element !== undefined && element instanceof SRoutingHandle;
 }
 
-export function isSelectableAndBoundsAware(element: SModelElement): element is BoundsAware & Selectable & SModelElement {
+export type SelectableBoundsAwareElement = BoundsAwareElement & Selectable;
+
+export function isSelectableAndBoundsAware(element: SModelElement): element is SelectableBoundsAwareElement {
     return isSelectable(element) && isBoundsAware(element);
 }
 
-export type SelectableBoundsAware = SModelElement & BoundsAware & Selectable;
+export type BoundsAwareElement = SModelElement & BoundsAware;
 
-export type BoundsAwareModelElement = SModelElement & BoundsAware;
-
-export function toElementAndBounds(element: SModelElement & BoundsAware): ElementAndBounds {
+export function toElementAndBounds(element: BoundsAwareElement): ElementAndBounds {
     return {
         elementId: element.id,
         newPosition: {
