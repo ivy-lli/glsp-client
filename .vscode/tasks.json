@@ -11,7 +11,7 @@
       "command": "yarn",
       "presentation": {
         "reveal": "always",
-        "panel": "new"
+        "panel": "dedicated"
       },
       "problemMatcher": [
         "$tsc",
@@ -26,7 +26,7 @@
       "command": "yarn watch",
       "presentation": {
         "reveal": "always",
-        "panel": "new"
+        "panel": "dedicated"
       },
       "problemMatcher": [
         "$tsc-watch"
@@ -38,7 +38,7 @@
       "group": "test",
       "presentation": {
         "reveal": "always",
-        "panel": "new"
+        "panel": "dedicated"
       },
       "command": "google-chrome examples/workflow-standalone/app/diagram.html"
     }
